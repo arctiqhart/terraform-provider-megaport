@@ -45,7 +45,7 @@ resource "megaport_mcr" "example" {
 
 // mcr to aws vxc
 resource "megaport_aws_connection" "example" {
-  vxc_name   = "${var.prefix} Terraform Test - AWS VXC"
+  vxc_name   = "${var.prefix}-vxc-mp-aws"
   rate_limit = 1000
 
   a_end {
@@ -56,14 +56,14 @@ resource "megaport_aws_connection" "example" {
     attached_to          = megaport_mcr.example.id
     requested_product_id = data.megaport_partner_port.aws_syd_port.id
     requested_asn        = 64550
-    amazon_asn           = aws_dx_gateway.tf_test.amazon_side_asn
+    amazon_asn           = aws_dx_gateway.megaport_poc.amazon_side_asn
     amazon_account       = data.aws_caller_identity.current.account_id
   }
 }
 
 // mcr to gcp vxc
-resource "megaport_gcp_connection" "example" {
-  vxc_name   = "${var.prefix} Terraform Test - GCP VXC"
+resource "megaport_gcp_connection" "vxc_mp_gcp" {
+  vxc_name   = "${var.prefix}-vxc-mp-gcp"
   rate_limit = 1000
 
   a_end {
@@ -71,7 +71,7 @@ resource "megaport_gcp_connection" "example" {
   }
 
   csp_settings {
-    attached_to = megaport_mcr.example.id
-    pairing_key = google_compute_interconnect_attachment.tf_test.pairing_key
+    attached_to = megaport_mcr.vxc_mp_gcp.id
+    pairing_key = google_compute_interconnect_attachment.megaport_poc.pairing_key
   }
 }

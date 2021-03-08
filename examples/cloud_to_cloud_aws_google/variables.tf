@@ -17,7 +17,7 @@
 # aws variables
 variable "aws_region" {
   description = "The AWS region to create resources in"
-  default     = "ap-southeast-2"
+  default     = "ca-central-1"
 }
 
 variable "aws_vpc_cidr" {
@@ -38,12 +38,12 @@ variable "aws_ec2_instance_type" {
 # gcp variables
 variable "gcp_region" {
   description = "The GCP region to create resources in"
-  default     = "australia-southeast1"
+  default     = "northamerica-northeast1"
 }
 
 variable "gcp_project" {
   description = "The name of the project you want your resources created in"
-  default     = "megaport-customer-project"
+  default     = "megaport"
 }
 
 variable "gcp_subnetwork_cidr" {
@@ -63,10 +63,10 @@ variable "gcp_machine_type" {
 
 variable prefix {
   description = "A prefix to add to all the environments"
-  default     = "DemoEnv"
+  default     = "megaport_poc"
 }
 
 variable aws_ec2_key_pair_name {
   description = "The name of a keypair you have created in the AWS account."
-  default     = "terraform-testing"
+  default     = "megaport"
 }

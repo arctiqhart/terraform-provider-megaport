@@ -33,7 +33,7 @@ data "aws_ami" "amzn2linux" {
 }
 
 // networking
-resource "aws_vpc" "tf_test" {
+resource "aws_vpc" "megaport_poc" {
   cidr_block = var.aws_vpc_cidr
 
   tags = {
@@ -41,9 +41,9 @@ resource "aws_vpc" "tf_test" {
   }
 }
 
-resource "aws_subnet" "tf_test" {
-  vpc_id                  = aws_vpc.tf_test.id
-  cidr_block              = aws_vpc.tf_test.cidr_block
+resource "aws_subnet" "megaport_poc" {
+  vpc_id                  = aws_vpc.megaport_poc.id
+  cidr_block              = aws_vpc.megaport_poc.cidr_block
   map_public_ip_on_launch = false
 
   tags = {
@@ -51,21 +51,21 @@ resource "aws_subnet" "tf_test" {
   }
 }
 
-resource "aws_route_table" "tf_test" {
-  vpc_id = aws_vpc.tf_test.id
+resource "aws_route_table" "megaport_poc" {
+  vpc_id = aws_vpc.megaport_poc.id
 
   tags = {
     Name = "${var.prefix} Terraform Route Table"
   }
 }
 
-resource "aws_route_table_association" "tf_test" {
-  subnet_id      = aws_subnet.tf_test.id
-  route_table_id = aws_route_table.tf_test.id
+resource "aws_route_table_association" "megaport_poc" {
+  subnet_id      = aws_subnet.megaport_poc.id
+  route_table_id = aws_route_table.megaport_poc.id
 }
 
-resource "aws_security_group" "tf_test" {
-  vpc_id      = aws_vpc.tf_test.id
+resource "aws_security_group" "megaport_poc" {
+  vpc_id      = aws_vpc.megaport_poc.id
   name        = "${var.prefix} Terraform Security Group"
   description = "${var.prefix} Terraform Security Group"
 
@@ -96,33 +96,33 @@ resource "aws_security_group" "tf_test" {
 }
 
 // vpn gateway
-resource "aws_vpn_gateway" "tf_test" {
-  vpc_id = aws_vpc.tf_test.id
+resource "aws_vpn_gateway" "megaport_poc" {
+  vpc_id = aws_vpc.megaport_poc.id
 
   tags = {
     Name = "${var.prefix} Terraform Virtual Gateway"
   }
 }
 
-resource "aws_vpn_gateway_route_propagation" "tf_test" {
-  vpn_gateway_id = aws_vpn_gateway.tf_test.id
-  route_table_id = aws_route_table.tf_test.id
+resource "aws_vpn_gateway_route_propagation" "megaport_poc" {
+  vpn_gateway_id = aws_vpn_gateway.megaport_poc.id
+  route_table_id = aws_route_table.megaport_poc.id
 }
 
 // direct connect
-resource "aws_dx_gateway" "tf_test" {
+resource "aws_dx_gateway" "megaport_poc" {
   name            = "${var.prefix} Terraform DX Gateway"
   amazon_side_asn = var.aws_dx_gateway_asn
 }
 
-resource "aws_dx_gateway_association" "tf_test" {
-  dx_gateway_id         = aws_dx_gateway.tf_test.id
-  associated_gateway_id = aws_vpn_gateway.tf_test.id
+resource "aws_dx_gateway_association" "megaport_poc" {
+  dx_gateway_id         = aws_dx_gateway.megaport_poc.id
+  associated_gateway_id = aws_vpn_gateway.megaport_poc.id
 }
 
-resource "aws_dx_hosted_private_virtual_interface_accepter" "tf_test" {
+resource "aws_dx_hosted_private_virtual_interface_accepter" "megaport_poc" {
   virtual_interface_id = megaport_aws_connection.example.aws_id
-  vpn_gateway_id       = aws_vpn_gateway.tf_test.id
+  vpn_gateway_id       = aws_vpn_gateway.megaport_poc.id
 
   tags = {
     Side = "Accepter"
@@ -131,11 +131,11 @@ resource "aws_dx_hosted_private_virtual_interface_accepter" "tf_test" {
 }
 
 // instance
-resource "aws_instance" "tf_test" {
+resource "aws_instance" "megaport_poc" {
   ami                    = data.aws_ami.amzn2linux.id
   instance_type          = var.aws_ec2_instance_type
-  subnet_id              = aws_subnet.tf_test.id
-  vpc_security_group_ids = [aws_security_group.tf_test.id]
+  subnet_id              = aws_subnet.megaport_poc.id
+  vpc_security_group_ids = [aws_security_group.megaport_poc.id]
   key_name               = var.aws_ec2_key_pair_name
 
   tags = {
