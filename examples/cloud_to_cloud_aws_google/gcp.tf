@@ -20,12 +20,12 @@ data "google_compute_zones" "available" {
 
 // networking
 resource "google_compute_network" "megaport_poc" {
-  name                    = "${lower(var.prefix)}-terraform-network"
+  name                    = "${lower(var.prefix)}-network"
   auto_create_subnetworks = false
 }
 
-resource "google_compute_firewall" "tf-test" {
-  name    = "${lower(var.prefix)}-terraform-firewall"
+resource "google_compute_firewall" "megaport_poc" {
+  name    = "${lower(var.prefix)}-firewall"
   network = google_compute_network.megaport_poc.self_link
 
   allow {
@@ -39,7 +39,7 @@ resource "google_compute_firewall" "tf-test" {
 }
 
 resource "google_compute_subnetwork" "megaport_poc" {
-  name          = "${lower(var.prefix)}-terraform-subnetwork"
+  name          = "${lower(var.prefix)}-subnetwork"
   ip_cidr_range = var.gcp_subnetwork_cidr
   region        = var.gcp_region
   network       = google_compute_network.megaport_poc.self_link
@@ -47,7 +47,7 @@ resource "google_compute_subnetwork" "megaport_poc" {
 
 // interconnect setup
 resource "google_compute_router" "megaport_poc" {
-  name    = "${lower(var.prefix)}-terraform-router"
+  name    = "${lower(var.prefix)}-router"
   network = google_compute_network.megaport_poc.name
 
   bgp {
@@ -61,7 +61,7 @@ resource "google_compute_router" "megaport_poc" {
 }
 
 resource "google_compute_interconnect_attachment" "megaport_poc" {
-  name                     = "${lower(var.prefix)}-terraform-interconnect"
+  name                     = "${lower(var.prefix)}-interconnect"
   type                     = "PARTNER"
   router                   = google_compute_router.megaport_poc.self_link
   edge_availability_domain = "AVAILABILITY_DOMAIN_1"
@@ -70,7 +70,7 @@ resource "google_compute_interconnect_attachment" "megaport_poc" {
 
 // instance
 resource "google_compute_instance" "megaport_poc" {
-  name                      = "${lower(var.prefix)}-terraform-instance"
+  name                      = "${lower(var.prefix)}-instance"
   machine_type              = var.gcp_machine_type
   zone                      = data.google_compute_zones.available.names[0]
   allow_stopping_for_update = true

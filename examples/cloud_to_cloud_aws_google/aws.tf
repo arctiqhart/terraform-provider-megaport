@@ -37,7 +37,7 @@ resource "aws_vpc" "megaport_poc" {
   cidr_block = var.aws_vpc_cidr
 
   tags = {
-    Name = "${var.prefix} Terraform VPC"
+    Name = "${var.prefix}-network"
   }
 }
 
@@ -47,7 +47,7 @@ resource "aws_subnet" "megaport_poc" {
   map_public_ip_on_launch = false
 
   tags = {
-    Name = "${var.prefix} Terraform Subnet"
+    Name = "${var.prefix}-subnetwork"
   }
 }
 
@@ -55,7 +55,7 @@ resource "aws_route_table" "megaport_poc" {
   vpc_id = aws_vpc.megaport_poc.id
 
   tags = {
-    Name = "${var.prefix} Terraform Route Table"
+    Name = "${var.prefix}-route_table"
   }
 }
 
@@ -66,8 +66,8 @@ resource "aws_route_table_association" "megaport_poc" {
 
 resource "aws_security_group" "megaport_poc" {
   vpc_id      = aws_vpc.megaport_poc.id
-  name        = "${var.prefix} Terraform Security Group"
-  description = "${var.prefix} Terraform Security Group"
+  name        = "${var.prefix}-sg"
+  description = "${var.prefix}-sg"
 
   ingress {
     cidr_blocks = ["0.0.0.0/0"]
@@ -90,8 +90,8 @@ resource "aws_security_group" "megaport_poc" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   tags = {
-    Name        = "${var.prefix} Terraform Security Group"
-    Description = "${var.prefix} Terraform Security Group"
+    Name        = "${var.prefix}-sg"
+    Description = "${var.prefix}-sg"
   }
 }
 
@@ -100,7 +100,7 @@ resource "aws_vpn_gateway" "megaport_poc" {
   vpc_id = aws_vpc.megaport_poc.id
 
   tags = {
-    Name = "${var.prefix} Terraform Virtual Gateway"
+    Name = "${var.prefix}-vpn_gateway"
   }
 }
 
@@ -111,7 +111,7 @@ resource "aws_vpn_gateway_route_propagation" "megaport_poc" {
 
 // direct connect
 resource "aws_dx_gateway" "megaport_poc" {
-  name            = "${var.prefix} Terraform DX Gateway"
+  name            = "${var.prefix}-dx_gateway"
   amazon_side_asn = var.aws_dx_gateway_asn
 }
 
@@ -126,7 +126,7 @@ resource "aws_dx_hosted_private_virtual_interface_accepter" "megaport_poc" {
 
   tags = {
     Side = "Accepter"
-    Name = "${var.prefix} Accepter"
+    Name = "${var.prefix}-accept"
   }
 }
 
@@ -139,6 +139,6 @@ resource "aws_instance" "megaport_poc" {
   key_name               = var.aws_ec2_key_pair_name
 
   tags = {
-    Name = "${var.prefix} Terraform Instance"
+    Name = "${var.prefix}-instance"
   }
 }
